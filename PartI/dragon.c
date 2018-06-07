@@ -6,6 +6,8 @@
 #include "image.h"
 #include "dragon.h"
 
+#define LEVEL 6;
+
 /* x, y: coordinates of turtle */
 static long x, y;
 
@@ -25,7 +27,36 @@ static vector_t direction;
  * iteration corresponds to a 45 degree rotation of the turtle anti-clockwise.  */
 vector_t starting_direction(int total_iterations)
 {
-  //TODO
+  switch (total_iterations) {
+  	case 0:
+			direction.dx = 1;
+			direction.dy = 0;
+		case 1:
+			direction.dx = 1;
+			direction.dy = 1;
+		case 2:
+			direction.dx = 0;
+			direction.dy = 1;
+		case 3:
+			direction.dx = -1;
+			direction.dy = 1;
+		case 4:
+			direction.dx = -1;
+			direction.dy = 0;
+		case 5:
+			direction.dx = -1;
+			direction.dy = -1;
+		case 6:
+			direction.dx = 0;
+			direction.dy = -1;
+		case 7:
+			direction.dx = 1;
+			direction.dy = -1;
+		default:
+			perror("starting_direction");
+			exit(EXIT_FAILURE);
+  }
+	return direction;
 }
 
 /* Draws a pixel to dst at location (x, y). The pixel intensity is chosen as a
@@ -35,10 +66,33 @@ vector_t starting_direction(int total_iterations)
  * along the path to give some contrast between segments close to each other
  * spatially.
  */
-void draw_greyscale(image_t *dst,long x, long y)
+void draw_greyscale(image_t *dst, long x, long y)
 {
-	//TODO
+	int height = dst->height;
+	int level = LEVEL * drawn_pixels / (height * height);
+
+	uint8_t grey_value;
+
+	switch (level) {
+		case 0:
+			grey_value = 100;
+		case 1:
+			grey_value = 120;
+		case 2:
+			grey_value = 150;
+		case 3:
+			grey_value = 180;
+		case 4:
+			grey_value = 200;
+		default:
+			grey_value = 255;
+	}
+
+	set_pixel(dst, (int)x, (int)y, grey_value);
+
 }
+
+
 /* Iterates though the characters of str, recusively calling string_iteration()
  * until rules have been applied iterations times, or no rule is applicable.
  * and update the image.
